@@ -35,6 +35,8 @@ public class Gamemanager : MonoBehaviour
         {
             CannonStage = cannonStage.run;
         }
+        print(CannonStage);
+
 
         switch (GameStage)
         {
@@ -42,17 +44,24 @@ public class Gamemanager : MonoBehaviour
                 target = targetList[0];
                 if (CannonStage == cannonStage.run)
                 {
-
+                    cannon.transform.DOMove(targetList[0].position, 2f).OnComplete(() => upState(gameStage.stage2));
                 }
 
                     break;
             case (gameStage.stage2):
                 target = targetList[1];
+                if (CannonStage == cannonStage.run)
+                {
+                    cannon.transform.DOMove(targetList[1].position, 2f).OnComplete(() => upState(gameStage.stage3));
+                }
 
                 break;
             case (gameStage.stage3):
                 target = targetList[2];
-                cannon.transform.localPosition = targetList[1].position;
+                if (CannonStage == cannonStage.run)
+                {
+                    CannonStage = cannonStage.win;
+                }
                 break;
         }
 
@@ -76,7 +85,12 @@ public class Gamemanager : MonoBehaviour
             
         }
     }
-
+    IEnumerator delayStage(gameStage gameStage)
+    {
+        cannon.transform.DOMove(targetList[0].position, 2f);
+        yield return new WaitForSeconds(2f);
+        upState(gameStage);
+    }
     void upState(gameStage gameStage)
     {
         CannonStage = cannonStage.wait;

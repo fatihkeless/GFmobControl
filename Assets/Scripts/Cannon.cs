@@ -10,6 +10,10 @@ public class Cannon : MonoBehaviour
     public float fireRate = 1;
     Transform spawnPoint;
 
+    public float speed;
+
+    public Joystick joyStick;
+    float limitX;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +58,35 @@ public class Cannon : MonoBehaviour
         }
         
 
+    }
+    private void FixedUpdate()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            if(Gamemanager.CannonStage == cannonStage.wait)
+            {
+                transform.Translate(new Vector3(-joyStick.Horizontal, 0, 0) * Time.deltaTime * speed);
+            }
+            
+        }
+    }
+    private void LateUpdate()
+    {
+
+        switch (_gameManager.GameStage)
+        {
+            case (gameStage.stage1):
+                limitX = Mathf.Clamp(transform.position.x, -7f, 5f);
+                break;
+            case (gameStage.stage2):
+                limitX = Mathf.Clamp(transform.position.x, -8f, 3f);
+                break;
+            case (gameStage.stage3):
+                limitX = Mathf.Clamp(transform.position.x, 25f, 37f);
+                break;
+        }
+        
+        transform.position = new Vector3(limitX, transform.position.y, transform.position.z);
     }
 
     void Shoot()

@@ -10,9 +10,16 @@ public class Castle : MonoBehaviour
     Gamemanager _gameManager;
 
     public GameObject fireParticle;
+    
 
     bool enableBool;
-   
+
+    public GameObject enemyPrefabs;
+    public Transform spawnPoint;
+    public bool castleFireBool;
+
+    public float currentFireRate = 0;
+    public float fireRate = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +27,7 @@ public class Castle : MonoBehaviour
         _gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<Gamemanager>();
         healtText.text = castleHealt.ToString();
         enableBool = false;
+        castleFireBool = false;
     }
 
     // Update is called once per frame
@@ -36,10 +44,21 @@ public class Castle : MonoBehaviour
                 GetComponent<BoxCollider>().enabled = false;
                 enableBool = true;
             }
-
-            
-
         }
+        if (!enableBool && castleFireBool)
+        {
+            if (currentFireRate > 0)
+            {
+                currentFireRate -= Time.deltaTime;
+            }
+            if (currentFireRate <= 0)
+            {
+                Shoot();
+            }
+        }
+
+        
+
     }
 
 
@@ -49,5 +68,24 @@ public class Castle : MonoBehaviour
 
 
     }
-
+    void Shoot()
+    {
+        Debug.Log("geldi");
+        GameObject newCh = Instantiate(enemyPrefabs, spawnPoint.position, Quaternion.identity);
+        _gameManager.characterList.Add(newCh);
+        
+        if (_gameManager.GameStage == gameStage.stage1)
+        {
+            newCh.transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+        else if (_gameManager.GameStage == gameStage.stage2)
+        {
+            newCh.transform.eulerAngles = new Vector3(0, -30, 0);
+        }
+        else
+        {
+            newCh.transform.eulerAngles = new Vector3(0, -30, 0);
+        }
+        currentFireRate = fireRate;
+    }
 }

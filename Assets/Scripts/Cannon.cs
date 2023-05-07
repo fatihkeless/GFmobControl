@@ -79,14 +79,15 @@ public class Cannon : MonoBehaviour
                 limitX = Mathf.Clamp(transform.position.x, -7f, 5f);
                 break;
             case (gameStage.stage2):
-                limitX = Mathf.Clamp(transform.position.x, -8f, 3f);
+
                 break;
             case (gameStage.stage3):
-                limitX = Mathf.Clamp(transform.position.x, 25f, 37f);
+
+                
+                
                 break;
         }
         
-        transform.position = new Vector3(limitX, transform.position.y, transform.position.z);
     }
 
     void Shoot()
@@ -94,7 +95,19 @@ public class Cannon : MonoBehaviour
         Debug.Log("geldi");
         GameObject newCh = Instantiate(characterPrefabs, spawnPoint.position, Quaternion.identity);
         _gameManager.characterList.Add(newCh);
-        newCh.transform.eulerAngles = new Vector3(0, -180, 0);
+        if(_gameManager.GameStage == gameStage.stage1)
+        {
+            newCh.transform.eulerAngles = new Vector3(0, -180, 0);
+        }
+        else if(_gameManager.GameStage == gameStage.stage2)
+        {
+            newCh.transform.eulerAngles = new Vector3(0, 150, 0);
+        }
+        else
+        {
+            newCh.transform.eulerAngles = new Vector3(0, 150, 0);
+        }
+        
         
         currentFireRate = fireRate;
     }

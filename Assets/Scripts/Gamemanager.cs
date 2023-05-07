@@ -42,26 +42,50 @@ public class Gamemanager : MonoBehaviour
         {
             case (gameStage.stage1):
                 target = targetList[0];
+                
                 if (CannonStage == cannonStage.run)
                 {
-                    cannon.transform.DOMove(targetList[0].position, 2f).OnComplete(() => upState(gameStage.stage2));
+                    cannon.transform.DOMove(new Vector3(-2.34349871f, 0, -37.9981575f), 2.5f).OnComplete(() => 
+                    cannon.transform.DORotate(new Vector3(270, 329, 0), 0.5f).OnComplete(()=>
+                    upState(gameStage.stage2)));
+                }
+                else if (CannonStage == cannonStage.wait)
+                {
+                    targetList[0].gameObject.GetComponent<Castle>().castleFireBool = true;
+                    targetList[1].gameObject.GetComponent<Castle>().castleFireBool = false;
+                    targetList[2].gameObject.GetComponent<Castle>().castleFireBool = false;
                 }
 
-                    break;
+                break;
             case (gameStage.stage2):
                 target = targetList[1];
+                
                 if (CannonStage == cannonStage.run)
                 {
-                    cannon.transform.DOMove(targetList[1].position, 2f).OnComplete(() => upState(gameStage.stage3));
+                    cannon.transform.DOMove(new Vector3(31.0499992f, 0.0900000036f, -91.2300034f), 2.5f).OnComplete(() => upState(gameStage.stage3));
+                }
+                else if (CannonStage == cannonStage.wait)
+                {
+                    targetList[0].gameObject.GetComponent<Castle>().castleFireBool = false;
+                    targetList[1].gameObject.GetComponent<Castle>().castleFireBool = true;
+                    targetList[2].gameObject.GetComponent<Castle>().castleFireBool = false;
                 }
 
                 break;
             case (gameStage.stage3):
                 target = targetList[2];
+                
                 if (CannonStage == cannonStage.run)
                 {
                     CannonStage = cannonStage.win;
                 }
+                else if(CannonStage == cannonStage.wait)
+                {
+                    targetList[0].gameObject.GetComponent<Castle>().castleFireBool = false;
+                    targetList[1].gameObject.GetComponent<Castle>().castleFireBool = false;
+                    targetList[2].gameObject.GetComponent<Castle>().castleFireBool = true;
+                }
+
                 break;
         }
 
@@ -85,12 +109,9 @@ public class Gamemanager : MonoBehaviour
             
         }
     }
-    IEnumerator delayStage(gameStage gameStage)
-    {
-        cannon.transform.DOMove(targetList[0].position, 2f);
-        yield return new WaitForSeconds(2f);
-        upState(gameStage);
-    }
+    
+
+
     void upState(gameStage gameStage)
     {
         CannonStage = cannonStage.wait;
